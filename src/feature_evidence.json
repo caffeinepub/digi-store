@@ -2,12 +2,14 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-ui-product-form-to-support-creating-updating-a-product-as-a-digital-product-and-uploading-an-associated-downloadable-file-in-addition-to-the-existing-product-image-upload-use-english-for-all-user-facing-text",
-      "featureTitle": "Update the Admin UI product form to support creating/updating a product as a digital product and uploading an associated downloadable file (in addition to the existing product image upload). Use English for all user-facing text.",
+      "featureId": "feature-make-the-add-new-product-flow-fully-functional-end-to-end-so-an-admin-can-add-a-product-from-the-admin-page-and-the-newly-created-product-reliably-appears-in-the-existing-products-list-and-is-visible-in-the-shop-page-and-product-detail-page-without-requiring-a-manual-refresh-or-reseeding",
+      "featureTitle": "Make the \"Add New Product\" flow fully functional end-to-end so an admin can add a product from the Admin page and the newly created product reliably appears in the \"Existing Products\" list and is visible in the Shop page and Product Detail page without requiring a manual refresh or reseeding.",
       "files": [
-        "frontend/src/components/admin/ProductDigitalDownloadDialog.tsx",
         "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/AdminPage.tsx"
+        "frontend/src/pages/AdminPage.tsx",
+        "frontend/src/pages/ProductDetailPage.tsx",
+        "frontend/src/pages/ShopPage.tsx",
+        "frontend/src/utils/productImage.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -21,34 +23,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-customer-downloads-flow-1-ensure-the-checkout-success-url-includes-enough-context-e-g-productid-s-and-or-session-id-to-confirm-entitlements-2-on-the-payment-success-page-confirm-the-purchase-and-show-a-working-list-of-downloadable-items-for-the-logged-in-user-and-3-make-the-existing-view-downloads-button-navigate-to-a-dedicated-downloads-page-that-lists-entitled-digital-products-and-provides-download-links",
-      "featureTitle": "Add a customer downloads flow: (1) ensure the checkout success URL includes enough context (e.g., productId(s) and/or session id) to confirm entitlements, (2) on the Payment Success page, confirm the purchase and show a working list of downloadable items for the logged-in user, and (3) make the existing “View Downloads” button navigate to a dedicated downloads page that lists entitled digital products and provides download links.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/Header.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/DownloadsPage.tsx",
-        "frontend/src/pages/PaymentSuccessPage.tsx",
-        "frontend/src/pages/ProductDetailPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "stripe@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "http-outcalls@3.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
+        "REQ-17"
       ],
       "confidence": "high"
     }

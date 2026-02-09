@@ -1,43 +1,69 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T10:12:50.937Z",
-  "summary": "Diff adds a new optional Product.digitalDownload model field with migration support, introduces admin UI for managing a product’s digital download file, and adds a customer downloads flow with a new Downloads page and purchase processing on the Payment Success page. However, the purchase entitlement confirmation does not appear to use/record the Stripe sessionId as required, and the Admin product form does not clearly support marking a product as digital during creation/update (only managing a download via a separate dialog is shown).",
+  "generatedAt": "2026-02-09T11:13:33.286Z",
+  "summary": "Diff focuses on improving product image URL handling (new helper) and updating React Query product hooks/pages to better fetch and render newly added products across Admin, Shop, and Product Detail views. However, key parts of the Add Product mutation behavior and success toast/invalidation timing are truncated in the diff summary, so end-to-end REQ-17 compliance cannot be fully verified from the provided evidence.",
   "missing_requirements": [
     {
-      "id": "REQ-5",
-      "requirement": "A user-only method exists to confirm a purchase for one or more productIds using a Stripe session id (sessionId) and persists entitlements for the caller.",
-      "reason": "The Payment Success page extracts a session_id from the URL but does not pass it to the backend; it calls a recordPurchase mutation with only productId and allowedDownloads. No evidence in the shown diff that any backend API accepts/uses a Stripe sessionId for entitlement confirmation.",
+      "id": "REQ-17",
+      "requirement": "After creating a product in Admin → Products → Add New Product, show a success toast in English.",
+      "reason": "AdminPage imports `toast` but the diff summary is truncated before showing any `toast.success(...)` call or the exact English success message on product creation.",
       "evidence": [
-        "frontend/src/pages/PaymentSuccessPage.tsx",
-        "frontend/src/hooks/useQueries.ts (truncated)",
-        "backend/main.mo (truncated)"
+        "frontend/src/pages/AdminPage.tsx (truncated)"
       ]
     },
     {
-      "id": "REQ-6",
-      "requirement": "Update the Admin UI product form to support creating/updating a product as a digital product (e.g., via switch/checkbox) and uploading an associated downloadable file in addition to product image upload.",
-      "reason": "Admin UI changes shown focus on a separate \"Manage Digital Download\" dialog for an existing product. The truncated AdminPage snippet shows state for product fields and image upload, but does not show any control/field to mark a product as digital during creation/update; digital handling appears to be only via the dialog after the product exists.",
+      "id": "REQ-17",
+      "requirement": "After adding a product, the new product appears in the Admin page “Existing Products” list within a few seconds via React Query refetch/invalidation (no full reload).",
+      "reason": "`useAddProduct` is truncated right after `onSuccess`, so it’s not possible to confirm that the mutation invalidates/refetches `['products']` (and/or performs an optimistic cache update) to make the Admin list update automatically.",
       "evidence": [
-        "frontend/src/pages/AdminPage.tsx",
-        "frontend/src/components/admin/ProductDigitalDownloadDialog.tsx"
+        "frontend/src/hooks/useQueries.ts (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "requirement": "After adding a product, navigating to the Shop page shows the new product in the product grid and it is searchable/filterable like other products (without reseeding/manual refresh).",
+      "reason": "ShopPage uses `useGetProducts` and filters client-side, but the diff summary does not provide evidence that the add-product mutation updates/invalidates the shared `['products']` cache so Shop reliably reflects the newly added product without manual refresh.",
+      "evidence": [
+        "frontend/src/pages/ShopPage.tsx (truncated)",
+        "frontend/src/hooks/useQueries.ts (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "requirement": "Clicking the new product in Shop opens Product Detail and loads successfully (no “Product not found” fallback for the newly created product).",
+      "reason": "ProductDetailPage still renders an explicit “Product not found” fallback when `useGetProduct` returns null; the diff summary does not show any mechanism (e.g., cache prefill for `['product', id]` after add, or guaranteed backend availability handling) that ensures newly created products won’t hit this fallback.",
+      "evidence": [
+        "frontend/src/pages/ProductDetailPage.tsx (truncated)",
+        "frontend/src/hooks/useQueries.ts (truncated)"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.68,
+  "hallucinated_features": [
+    {
+      "description": "Global styling/theme redesign (new light theme tokens, premium utility classes, Tailwind config changes).",
+      "reason": "Not requested by REQ-17 (which is specifically about the Add New Product end-to-end flow). The diff summary indicates changes to global CSS and Tailwind configuration.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions modifications to frontend/src/index.css and frontend/tailwind.config.js)"
+      ]
+    },
+    {
+      "description": "Demo data seeding changes (component that seeds demo products/categories/hero/brand story).",
+      "reason": "REQ-17 does not ask to add/modify demo seeding; it is also called out as a non-goal to add a large catalog, and seeding is unrelated to making add-product work end-to-end.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions frontend/src/components/DemoDataSeeder.tsx)",
+        "frontend/src/pages/AdminPage.tsx (truncated, imports DemoDataSeeder)"
+      ]
+    }
+  ],
+  "confidence": 0.55,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/Header.tsx",
-    "frontend/src/components/admin/ProductDigitalDownloadDialog.tsx",
     "frontend/src/hooks/useQueries.ts",
     "frontend/src/pages/AdminPage.tsx",
-    "frontend/src/pages/DownloadsPage.tsx",
-    "frontend/src/pages/PaymentSuccessPage.tsx",
     "frontend/src/pages/ProductDetailPage.tsx",
+    "frontend/src/pages/ShopPage.tsx",
+    "frontend/src/utils/productImage.ts",
     "project_state.json"
   ]
 }

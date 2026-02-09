@@ -1,65 +1,68 @@
-import { useParams, useNavigate } from '@tanstack/react-router';
-import { useGetProduct } from '../hooks/useQueries';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useCreateCheckoutSession } from '../hooks/useQueries';
+import { useParams, Link } from '@tanstack/react-router';
+import { useGetProduct, useCreateCheckoutSession } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, ShoppingCart, Download, Package } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, Sparkles, ShoppingCart, Loader2, Download } from 'lucide-react';
-import { toast } from 'sonner';
-import type { ShoppingItem } from '../backend';
+import { useState } from 'react';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { getProductImageUrl } from '../utils/productImage';
 
 export default function ProductDetailPage() {
   const { productId } = useParams({ from: '/product/$productId' });
-  const navigate = useNavigate();
-  const { identity } = useInternetIdentity();
   const { data: product, isLoading } = useGetProduct(productId);
   const createCheckoutSession = useCreateCheckoutSession();
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const { identity, login } = useInternetIdentity();
 
   const handlePurchase = async () => {
     if (!identity) {
-      toast.error('Please log in to purchase products');
+      await login();
       return;
     }
 
     if (!product) return;
 
+    setIsPurchasing(true);
     try {
-      const shoppingItem: ShoppingItem = {
-        productName: product.name,
-        productDescription: product.description,
-        priceInCents: product.priceCents,
-        quantity: BigInt(1),
-        currency: 'inr',
-      };
+      const shoppingItems = [
+        {
+          productName: product.name,
+          productDescription: product.description,
+          priceInCents: product.priceCents,
+          quantity: BigInt(1),
+          currency: 'INR',
+        },
+      ];
 
       const session = await createCheckoutSession.mutateAsync({
-        items: [shoppingItem],
+        items: shoppingItems,
         productIds: [product.id],
       });
       
       if (!session?.url) {
         throw new Error('Stripe session missing url');
       }
-      
       window.location.href = session.url;
     } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('Failed to create checkout session. Please try again.');
+      console.error('Purchase error:', error);
+      setIsPurchasing(false);
     }
   };
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <Skeleton className="h-8 w-32 mb-8" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <Skeleton className="aspect-square" />
-          <div className="space-y-6">
-            <Skeleton className="h-12 w-3/4" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-12 w-32" />
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-12">
+          <Skeleton className="h-8 w-32 mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <Skeleton className="aspect-square" />
+            <div className="space-y-6">
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-16 w-full" />
+            </div>
           </div>
         </div>
       </div>
@@ -68,145 +71,136 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-        <p className="text-muted-foreground mb-8">The product you're looking for doesn't exist.</p>
-        <Button onClick={() => navigate({ to: '/shop' })}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Shop
-        </Button>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Package className="h-16 w-16 text-muted-foreground/40 mx-auto" />
+          <h2 className="text-2xl font-bold text-foreground">Product not found</h2>
+          <Link to="/shop">
+            <Button variant="outline">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Shop
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-vibrant-purple/5 to-background">
-      <div className="container mx-auto px-4 py-16">
-        <Button
-          variant="ghost"
-          onClick={() => navigate({ to: '/shop' })}
-          className="mb-8 hover:text-vibrant-magenta"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Shop
-        </Button>
+  const imageUrl = getProductImageUrl(product.images);
 
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-12">
+        {/* Back Button */}
+        <Link to="/shop">
+          <Button variant="ghost" className="mb-8 hover:text-primary">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Shop
+          </Button>
+        </Link>
+
+        {/* Product Details */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Image */}
           <div className="space-y-4">
-            <Card className="overflow-hidden border-vibrant-magenta/20">
-              <div className="aspect-square bg-vibrant-purple/5 relative">
-                {product.images.length > 0 ? (
+            <Card className="overflow-hidden border-border/60">
+              <div className="aspect-square bg-muted/30">
+                {imageUrl ? (
                   <img
-                    src={product.images[0].getDirectURL()}
+                    src={imageUrl}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-vibrant-purple/20 to-vibrant-magenta/20">
-                    <Sparkles className="h-24 w-24 text-vibrant-magenta/40" />
-                  </div>
-                )}
-                {product.digitalDownload && (
-                  <div className="absolute top-4 right-4 bg-vibrant-magenta text-white px-3 py-2 rounded-lg font-medium flex items-center gap-2 shadow-lg">
-                    <Download className="h-4 w-4" />
-                    Digital Product
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted/50 to-accent/30">
+                    <Package className="h-24 w-24 text-muted-foreground/40" />
                   </div>
                 )}
               </div>
             </Card>
           </div>
 
-          {/* Product Details */}
+          {/* Product Info */}
           <div className="space-y-6">
             <div className="space-y-4">
               <div className="flex items-start justify-between gap-4">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-vibrant-magenta via-vibrant-purple to-vibrant-blue bg-clip-text text-transparent">
-                  {product.name}
-                </h1>
-                {product.featured && (
-                  <Badge className="bg-vibrant-magenta text-white">
-                    <Sparkles className="h-3 w-3 mr-1" />
-                    Featured
+                <h1 className="text-4xl font-bold text-foreground">{product.name}</h1>
+                {product.digitalDownload && (
+                  <Badge className="bg-primary text-primary-foreground flex items-center gap-1">
+                    <Download className="h-3 w-3" />
+                    Digital
                   </Badge>
                 )}
               </div>
-
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-vibrant-magenta">
-                  ₹{(Number(product.priceCents) / 100).toFixed(2)}
-                </span>
-                <span className="text-muted-foreground">INR</span>
-              </div>
+              <p className="text-xl text-muted-foreground">{product.description}</p>
             </div>
 
-            <Card className="border-vibrant-magenta/20">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Product Description</h2>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {product.description}
-                </p>
+            {/* Price & Purchase */}
+            <Card className="border-border/60 bg-accent/20">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-bold text-primary">
+                    ₹{(Number(product.priceCents) / 100).toFixed(2)}
+                  </span>
+                  <span className="text-muted-foreground">INR</span>
+                </div>
+                <Button
+                  onClick={handlePurchase}
+                  disabled={isPurchasing || createCheckoutSession.isPending}
+                  size="lg"
+                  className="w-full premium-button text-lg"
+                >
+                  {isPurchasing || createCheckoutSession.isPending ? (
+                    'Processing...'
+                  ) : (
+                    <>
+                      <ShoppingCart className="mr-2 h-5 w-5" />
+                      {identity ? 'Purchase Now' : 'Login to Purchase'}
+                    </>
+                  )}
+                </Button>
+                {product.digitalDownload && (
+                  <p className="text-sm text-muted-foreground text-center">
+                    Instant download after purchase
+                  </p>
+                )}
               </CardContent>
             </Card>
 
-            <Card className="border-vibrant-magenta/20">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Product Details</h2>
-                <dl className="space-y-2">
+            {/* Product Details */}
+            <Card className="border-border/60">
+              <CardContent className="p-6 space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">Product Details</h3>
+                <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Category:</dt>
-                    <dd className="font-medium capitalize">{product.category.replace('-', ' ')}</dd>
+                    <span className="text-muted-foreground">Category:</span>
+                    <span className="font-medium text-foreground">{product.category}</span>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Type:</dt>
-                    <dd className="font-medium">{product.digitalDownload ? 'Digital Download' : 'Physical Product'}</dd>
+                    <span className="text-muted-foreground">Type:</span>
+                    <span className="font-medium text-foreground">
+                      {product.digitalDownload ? 'Digital Download' : 'Digital Product'}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Product ID:</dt>
-                    <dd className="font-mono text-sm">{product.id}</dd>
-                  </div>
-                </dl>
+                  {product.digitalDownload && (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">File Size:</span>
+                        <span className="font-medium text-foreground">
+                          {(Number(product.digitalDownload.fileSizeBytes) / 1024 / 1024).toFixed(2)} MB
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Format:</span>
+                        <span className="font-medium text-foreground">
+                          {product.digitalDownload.contentType}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
               </CardContent>
             </Card>
-
-            {product.digitalDownload && (
-              <Card className="border-vibrant-magenta/20 bg-vibrant-magenta/5">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3">
-                    <Download className="h-5 w-5 text-vibrant-magenta flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-semibold mb-1">Instant Digital Download</h3>
-                      <p className="text-sm text-muted-foreground">
-                        After purchase, you'll get immediate access to download this digital product.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            <Button
-              size="lg"
-              className="w-full vibrant-button text-lg"
-              onClick={handlePurchase}
-              disabled={createCheckoutSession.isPending}
-            >
-              {createCheckoutSession.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Purchase Now
-                </>
-              )}
-            </Button>
-
-            <p className="text-sm text-muted-foreground text-center">
-              Secure payment powered by Stripe. All transactions are encrypted and secure.
-            </p>
           </div>
         </div>
       </div>

@@ -1,73 +1,43 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Digital products: admin upload + customer downloads after purchase",
+  "title": "Fix admin Add Product flow so new products appear immediately across Admin, Shop, and Product Detail",
   "requirements": [
     {
-      "id": "REQ-6",
-      "summary": "Extend Admin product form to mark products as digital and upload/manage a separate downloadable file with required metadata.",
+      "id": "REQ-17",
+      "summary": "Ensure admin-created products immediately appear in Admin Existing Products, Shop grid (searchable/filterable), and Product Detail without manual refresh; ensure uploaded images render consistently with safe fallbacks.",
       "acceptanceCriteria": [
-        "Admin can mark a product as a digital product via a clear control (e.g., switch/checkbox).",
-        "Admin can upload a digital download file separately from product images and save it to the backend.",
-        "Validation prevents saving a digital product without the required digital metadata (if required by backend rules), and errors are shown in English."
+        "When logged in as an admin, creating a product from Admin → Products → Add New Product succeeds and shows the success toast in English.",
+        "After adding a product, the new product appears in the Admin page \"Existing Products\" list within a few seconds (React Query refetch/invalidation works) without a full page reload.",
+        "After adding a product, navigating to the Shop page shows the new product in the product grid (and it is searchable/filterable like other products).",
+        "Clicking the new product in Shop opens its Product Detail page, and the page loads the product successfully (no \"Product not found\" fallback).",
+        "If the admin uploads a product image, the image renders correctly on Admin cards, Shop cards, and Product Detail; if no image is uploaded, the existing placeholder UI renders without layout breakage."
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add React Query mutations/queries for digital download admin actions (set/update/remove digital download for a product). Use the blob-storage ExternalBlob for file upload and direct URL handling; verify the component's usage instructions before implementing."
+          "description": "Harden product React Query behavior to make newly added products visible immediately: update useAddProduct to (1) optimistically insert the created product into the ['products'] cache, (2) prefill the ['product', productId] cache for the created product, and (3) trigger targeted invalidate+refetch for ['products'] and related views so the Admin list and Shop grid update without reload. Keep all user-facing messages in English. If product images use ExternalBlob URLs, ensure cache updates preserve ExternalBlob instances (blob-storage component). Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/admin/ProductDigitalDownloadDialog.tsx",
+          "path": "frontend/src/utils/productImage.ts",
           "operation": "create",
-          "description": "Create an admin-only dialog/component for attaching/updating/removing a product digital download: inputs for content type, optional download limit, and a separate file input for the downloadable file. Convert File -> ExternalBlob (blob-storage) and show upload progress if supported; verify the component's usage instructions before implementing."
+          "description": "Add a small shared helper to safely derive a primary product image URL from Product.images (ExternalBlob) with try/catch safeguards and a consistent 'no image' result to preserve existing placeholder UI. This centralizes ExternalBlob.getDirectURL usage (blob-storage component) for Admin/Shop/Detail rendering. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/pages/AdminPage.tsx",
           "operation": "modify",
-          "description": "Update the Products tab UI to support digital products: add a 'Digital Product' switch + digital metadata fields and a separate downloadable file chooser (distinct from product images). Wire save actions to the new digital-download hooks and enforce English validation/error messaging. Add a 'Manage Digital Download' action per existing product card that opens ProductDigitalDownloadDialog."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Implement customer downloads flow: include purchase context in checkout success URL, confirm purchase on Payment Success, and add a dedicated Downloads page showing entitled digital downloads (login-gated).",
-      "acceptanceCriteria": [
-        "After a successful Stripe checkout, the app confirms the purchase and persists entitlement(s) for the logged-in user.",
-        "The Payment Success page displays download(s) for entitled digital products (or a clear English message if none are available).",
-        "A new Downloads page is accessible (e.g., via the Payment Success CTA) and lists entitled digital products with download links that work via the blob direct URL mechanism.",
-        "If the user is not logged in, the downloads UI prompts them to log in in English and does not show any private download links."
-      ],
-      "file_operations": [
+          "description": "Wire the improved add-product behavior into the Admin → Products → Add New Product flow: after a successful mutation, rely on the updated React Query cache/refetch to update the Existing Products list quickly, and ensure the success toast remains English. Update product card image rendering to use the shared product image helper so uploaded images reliably render and placeholders remain stable. Uses ExternalBlob direct URLs (blob-storage component). Verify the component's usage instructions before implementing."
+        },
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/pages/ShopPage.tsx",
           "operation": "modify",
-          "description": "Update the Stripe checkout hook to embed required context in the success URL (e.g., session id placeholder and productId(s)) and validate Stripe session JSON includes a non-empty url before redirecting. Add user queries for listing entitled digital downloads and a mutation to confirm a successful payment using the session id (per updated backend bindings). Use blob-storage ExternalBlob.getDirectURL() for download links; verify the component's usage instructions before implementing."
+          "description": "Update Shop product grid card image rendering to use the shared product image helper for consistent ExternalBlob URL handling; ensure products derived from the refreshed ['products'] query remain searchable/filterable without additional refresh. Uses ExternalBlob direct URLs (blob-storage component). Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/pages/ProductDetailPage.tsx",
           "operation": "modify",
-          "description": "Pass productId context into checkout creation so the generated Stripe success URL contains sufficient context for entitlement confirmation. Keep login-required behavior in English and ensure redirect only happens when Stripe session url is present (per stripe component guidance); verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/PaymentSuccessPage.tsx",
-          "operation": "modify",
-          "description": "On load, extract session id and purchased productId(s) from the URL (or persisted params) and, if the user is logged in, call the confirm-purchase mutation then fetch and render entitled digital downloads. Show clear English states for loading, errors, and 'no downloads available'. Update 'View Downloads' CTA to navigate to the dedicated Downloads page."
-        },
-        {
-          "path": "frontend/src/pages/DownloadsPage.tsx",
-          "operation": "create",
-          "description": "Create a Downloads page that is login-gated: if not logged in, prompt to log in in English and do not render download links. If logged in, list entitled digital products and provide working download links using blob-storage ExternalBlob direct URL mechanism; verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register a new TanStack Router route for the Downloads page (e.g., /downloads) and ensure it is wired into navigation flows (Payment Success CTA)."
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Optionally add a 'Downloads' navigation link that is visible only when the user is authenticated (Internet Identity), pointing to the new Downloads route, ensuring English text and no exposure of private links when logged out. Verify the authorization component's frontend usage guidance before implementing."
+          "description": "Improve Product Detail reliability for newly created products: ensure the page prefers cached product data when available (prefilled on add) and uses the shared product image helper for consistent rendering; keep existing placeholder UI when no image is present. Uses ExternalBlob direct URLs (blob-storage component). Verify the component's usage instructions before implementing."
         }
       ]
     }

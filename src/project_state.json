@@ -1,11 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
+  "projectStateVersion": 15,
   "summary": "Build an app for selling kids worksheets as digital products, including adding a large product catalog (11,000+ worksheets).",
   "architectural_notes": [
     "Worksheets products should be modeled/sold as digital/downloadable products (not physical/shippable)."
   ],
-  "known_issues": [],
+  "known_issues": [
+    "Deployment process failed with a deployment error (unable to complete deployment)."
+  ],
   "isFixRequest": false,
   "existing_features": [
     {
@@ -37,6 +39,86 @@
       "title": "Add a customer downloads flow: (1) ensure the checkout success URL includes enough context (e.g., productId(s) and/or session id) to confirm entitlements, (2) on the Payment Success page, confirm the purchase and show a working list of downloadable items for the logged-in user, and (3) make the existing “View Downloads” button navigate to a dedicated downloads page that lists entitled digital products and provides download links.",
       "reqIds": [
         "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-global-styling-theme-to-use-an-attractive-light-color-design-light-backgrounds-soft-accents-readable-contrast-instead-of-the-current-vibrant-magenta-purple-heavy-look-by-adjusting-the-tailwind-css-theme-tokens-and-utility-classes-so-the-new-palette-applies-consistently-across-the-app",
+      "title": "Update the global styling/theme to use an attractive light-color design (light backgrounds, soft accents, readable contrast) instead of the current vibrant magenta/purple-heavy look, by adjusting the Tailwind/CSS theme tokens and utility classes so the new palette applies consistently across the app.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-the-updated-light-color-theme-consistently-across-key-storefront-pages-and-shared-layout-components-by-replacing-or-reworking-existing-vibrant-gradient-styling-usages-e-g-vibrant-color-classes-gradient-headings-backgrounds-and-button-treatments-so-the-ui-feels-cohesive-and-polished-on-home-shop-product-detail-about-contact-downloads-and-payment-result-pages",
+      "title": "Apply the updated light-color theme consistently across key storefront pages and shared layout components by replacing or reworking existing vibrant/gradient styling usages (e.g., vibrant color classes, gradient headings/backgrounds, and button treatments) so the UI feels cohesive and polished on Home, Shop, Product Detail, About, Contact, Downloads, and payment result pages.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-global-light-theme-background-color-to-a-light-pink-by-changing-the-css-theme-token-used-by-tailwind-s-bg-background-the-background-variable-in-frontend-src-index-css-under-root",
+      "title": "Update the global light-theme background color to a light pink by changing the CSS theme token used by Tailwind’s `bg-background` (the `--background` variable in `frontend/src/index.css` under `:root`).",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-more-premium-eye-catching-brand-logo-and-update-the-site-to-use-it-in-the-header-and-footer-brand-area",
+      "title": "Create a more premium, eye-catching brand logo and update the site to use it in the header and footer brand area.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-standard-favicon-app-icon-assets-derived-from-the-new-logo-and-wire-them-into-the-html-head-so-the-browser-tab-icon-updates",
+      "title": "Add standard favicon/app icon assets derived from the new logo and wire them into the HTML head so the browser tab icon updates.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-polish-the-storefront-ui-to-feel-more-premium-by-replacing-remaining-vibrant-gradient-styling-treatments-e-g-vibrant-button-gradient-vibrant-bg-hover-shadow-vibrant-strong-background-gradients-with-a-more-refined-consistent-premium-look-across-the-main-customer-facing-pages-home-shop-product-detail-and-the-shared-header-footer",
+      "title": "Polish the storefront UI to feel more premium by replacing remaining “vibrant/gradient” styling treatments (e.g., vibrant-button, gradient-vibrant-bg, hover:shadow-vibrant, strong background gradients) with a more refined, consistent premium look across the main customer-facing pages (Home, Shop, Product Detail) and the shared Header/Footer.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-all-newly-generated-branding-images-are-shipped-as-static-assets-under-frontend-public-assets-generated-and-are-loaded-directly-by-the-frontend-no-backend-image-routing",
+      "title": "Ensure all newly generated branding images are shipped as static assets under frontend/public/assets/generated and are loaded directly by the frontend (no backend image routing).",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-product-priced-at-inr-199-00-19900-paise-to-the-product-catalog-so-it-is-visible-in-the-shop-and-product-detail-pages-after-demo-seeding",
+      "title": "Add a new product priced at INR ₹199.00 (19900 paise) to the product catalog so it is visible in the Shop and Product Detail pages after demo seeding.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-demo-data-setup-ui-text-to-accurately-reflect-the-new-total-number-of-demo-products-and-the-inr-price-range-after-adding-the-199-product",
+      "title": "Update Demo Data Setup UI text to accurately reflect the new total number of demo products and the INR price range after adding the ₹199 product.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-the-add-new-product-flow-fully-functional-end-to-end-so-an-admin-can-add-a-product-from-the-admin-page-and-the-newly-created-product-reliably-appears-in-the-existing-products-list-and-is-visible-in-the-shop-page-and-product-detail-page-without-requiring-a-manual-refresh-or-reseeding",
+      "title": "Make the \"Add New Product\" flow fully functional end-to-end so an admin can add a product from the Admin page and the newly created product reliably appears in the \"Existing Products\" list and is visible in the Shop page and Product Detail page without requiring a manual refresh or reseeding.",
+      "reqIds": [
+        "REQ-17"
       ],
       "version": 1
     }
@@ -76,6 +158,30 @@
       "reqIds": [
         "REQ-5"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Update storefront/admin UI styling to use an attractive light-color theme (improve overall look and feel)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Adjust the app’s global background color to a light pink (as part of the updated light-color theme)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Make the website feel more premium and add an eye-catching logo (branding update)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add a (kids worksheets) product priced at INR 199/- to the product catalog",
+      "reqIds": [],
       "status": "pending"
     }
   ],

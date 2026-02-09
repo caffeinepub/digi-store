@@ -66,10 +66,10 @@ export default {
                     border: 'oklch(var(--sidebar-border))',
                     ring: 'oklch(var(--sidebar-ring))'
                 },
-                'vibrant-magenta': 'oklch(var(--vibrant-magenta) / <alpha-value>)',
-                'vibrant-purple': 'oklch(var(--vibrant-purple) / <alpha-value>)',
-                'vibrant-pink': 'oklch(var(--vibrant-pink) / <alpha-value>)',
-                'vibrant-blue': 'oklch(var(--vibrant-blue) / <alpha-value>)'
+                'vibrant-magenta': 'oklch(var(--primary) / <alpha-value>)',
+                'vibrant-purple': 'oklch(var(--soft-lavender) / <alpha-value>)',
+                'vibrant-pink': 'oklch(var(--soft-coral) / <alpha-value>)',
+                'vibrant-blue': 'oklch(var(--soft-sky) / <alpha-value>)'
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -78,7 +78,7 @@ export default {
             },
             boxShadow: {
                 xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
-                vibrant: '0 10px 40px -10px oklch(var(--vibrant-magenta) / 0.4)'
+                vibrant: '0 4px 20px -4px oklch(var(--primary) / 0.15)'
             },
             keyframes: {
                 'accordion-down': {
@@ -101,4 +101,3 @@ export default {
     },
     plugins: [typography, containerQueries, animate]
 };
-

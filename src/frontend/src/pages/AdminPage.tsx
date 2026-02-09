@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Shield, Sparkles, Image as ImageIcon, Download } from 'lucide-react';
+import { Shield, Sparkles, Image as ImageIcon, Download, Package } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ExternalBlob } from '../backend';
@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import DemoDataSeeder from '../components/DemoDataSeeder';
 import ProductDigitalDownloadDialog from '../components/admin/ProductDigitalDownloadDialog';
 import type { Product } from '../backend';
+import { getProductImageUrl } from '../utils/productImage';
 
 export default function AdminPage() {
   const { identity } = useInternetIdentity();
@@ -235,30 +236,29 @@ export default function AdminPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Hero Banner</CardTitle>
-                <CardDescription>Set the main hero banner for the homepage</CardDescription>
+                <CardDescription>Configure the main hero banner on the homepage</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="hero-title">Title</Label>
                   <Input
                     id="hero-title"
+                    placeholder="Enter hero title"
                     value={heroTitle}
                     onChange={(e) => setHeroTitle(e.target.value)}
-                    placeholder="Enter hero title"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="hero-subtitle">Subtitle</Label>
-                  <Textarea
+                  <Input
                     id="hero-subtitle"
+                    placeholder="Enter hero subtitle"
                     value={heroSubtitle}
                     onChange={(e) => setHeroSubtitle(e.target.value)}
-                    placeholder="Enter hero subtitle"
-                    rows={3}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="hero-image">Background Image (Optional)</Label>
+                  <Label htmlFor="hero-image">Background Image</Label>
                   <Input
                     id="hero-image"
                     type="file"
@@ -266,7 +266,11 @@ export default function AdminPage() {
                     onChange={(e) => setHeroImageFile(e.target.files?.[0] || null)}
                   />
                 </div>
-                <Button onClick={handleSaveHeroBanner} disabled={setHeroBanner.isPending} className="luxury-button">
+                <Button
+                  onClick={handleSaveHeroBanner}
+                  disabled={setHeroBanner.isPending}
+                  className="premium-button"
+                >
                   {setHeroBanner.isPending ? 'Saving...' : 'Save Hero Banner'}
                 </Button>
               </CardContent>
@@ -282,23 +286,23 @@ export default function AdminPage() {
                   <Label htmlFor="story-title">Title</Label>
                   <Input
                     id="story-title"
+                    placeholder="Enter story title"
                     value={storyTitle}
                     onChange={(e) => setStoryTitle(e.target.value)}
-                    placeholder="Enter story title"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="story-content">Content</Label>
                   <Textarea
                     id="story-content"
+                    placeholder="Enter brand story"
                     value={storyContent}
                     onChange={(e) => setStoryContent(e.target.value)}
-                    placeholder="Enter your brand story"
                     rows={6}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="story-image">Image (Optional)</Label>
+                  <Label htmlFor="story-image">Hero Image</Label>
                   <Input
                     id="story-image"
                     type="file"
@@ -306,66 +310,84 @@ export default function AdminPage() {
                     onChange={(e) => setStoryImageFile(e.target.files?.[0] || null)}
                   />
                 </div>
-                <Button onClick={handleSaveBrandStory} disabled={setBrandStory.isPending} className="luxury-button">
+                <Button
+                  onClick={handleSaveBrandStory}
+                  disabled={setBrandStory.isPending}
+                  className="premium-button"
+                >
                   {setBrandStory.isPending ? 'Saving...' : 'Save Brand Story'}
                 </Button>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Products */}
+          {/* Products Management */}
           <TabsContent value="products" className="space-y-8">
             <Card>
               <CardHeader>
-                <CardTitle>Add New Product</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5" />
+                  Add New Product
+                </CardTitle>
                 <CardDescription>Create a new product for your store</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="product-name">Product Name</Label>
-                  <Input
-                    id="product-name"
-                    value={productName}
-                    onChange={(e) => setProductName(e.target.value)}
-                    placeholder="Enter product name"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="product-description">Description</Label>
-                  <Textarea
-                    id="product-description"
-                    value={productDescription}
-                    onChange={(e) => setProductDescription(e.target.value)}
-                    placeholder="Enter product description"
-                    rows={4}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="product-price">Price (INR)</Label>
+                    <Label htmlFor="product-name">Product Name *</Label>
+                    <Input
+                      id="product-name"
+                      placeholder="Enter product name"
+                      value={productName}
+                      onChange={(e) => setProductName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-price">Price (INR) *</Label>
                     <Input
                       id="product-price"
                       type="number"
                       step="0.01"
+                      placeholder="0.00"
                       value={productPrice}
                       onChange={(e) => setProductPrice(e.target.value)}
-                      placeholder="0.00"
                     />
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="product-description">Description *</Label>
+                  <Textarea
+                    id="product-description"
+                    placeholder="Enter product description"
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
+                    rows={4}
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="product-category">Category</Label>
+                    <Label htmlFor="product-category">Category *</Label>
                     <Select value={productCategory} onValueChange={setProductCategory}>
                       <SelectTrigger id="product-category">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories.map((cat) => (
-                          <SelectItem key={cat.id} value={cat.id}>
-                            {cat.name}
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-image">Product Image</Label>
+                    <Input
+                      id="product-image"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setProductImageFile(e.target.files?.[0] || null)}
+                    />
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -376,77 +398,82 @@ export default function AdminPage() {
                   />
                   <Label htmlFor="product-featured">Featured Product</Label>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="product-image">Product Image</Label>
-                  <Input
-                    id="product-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setProductImageFile(e.target.files?.[0] || null)}
-                  />
-                </div>
-                <Button onClick={handleAddProduct} disabled={addProduct.isPending} className="luxury-button">
+                <Button
+                  onClick={handleAddProduct}
+                  disabled={addProduct.isPending}
+                  className="premium-button"
+                >
                   {addProduct.isPending ? 'Adding...' : 'Add Product'}
                 </Button>
               </CardContent>
             </Card>
 
+            {/* Existing Products */}
             <Card>
               <CardHeader>
                 <CardTitle>Existing Products</CardTitle>
                 <CardDescription>Manage your product catalog</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {products.map((product) => (
-                    <Card key={product.id} className="overflow-hidden">
-                      <div className="aspect-square bg-muted relative">
-                        {product.images.length > 0 ? (
-                          <img
-                            src={product.images[0].getDirectURL()}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <ImageIcon className="h-12 w-12 text-muted-foreground" />
+                {products.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {products.map((product) => {
+                      const imageUrl = getProductImageUrl(product.images);
+                      return (
+                        <Card key={product.id} className="overflow-hidden premium-card">
+                          <div className="aspect-square overflow-hidden bg-muted/30 relative">
+                            {imageUrl ? (
+                              <img
+                                src={imageUrl}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted/50 to-accent/30">
+                                <Package className="h-16 w-16 text-muted-foreground/40" />
+                              </div>
+                            )}
+                            {product.digitalDownload && (
+                              <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs flex items-center gap-1">
+                                <Download className="h-3 w-3" />
+                                Digital
+                              </div>
+                            )}
                           </div>
-                        )}
-                        {product.digitalDownload && (
-                          <div className="absolute top-2 right-2 bg-vibrant-magenta text-white px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
-                            <Download className="h-3 w-3" />
-                            Digital
-                          </div>
-                        )}
-                      </div>
-                      <CardContent className="p-4 space-y-2">
-                        <h3 className="font-semibold truncate">{product.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          ₹{(Number(product.priceCents) / 100).toFixed(2)}
-                        </p>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => handleManageDigitalDownload(product)}
-                        >
-                          <Download className="mr-2 h-4 w-4" />
-                          {product.digitalDownload ? 'Edit' : 'Add'} Digital Download
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-                {products.length === 0 && (
-                  <p className="text-center text-muted-foreground py-8">
-                    No products yet. Add your first product above!
-                  </p>
+                          <CardContent className="p-4 space-y-2">
+                            <h3 className="font-semibold line-clamp-1">{product.name}</h3>
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                              {product.description}
+                            </p>
+                            <div className="flex items-center justify-between pt-2">
+                              <span className="text-lg font-bold text-primary">
+                                ₹{(Number(product.priceCents) / 100).toFixed(2)}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleManageDigitalDownload(product)}
+                              >
+                                <Download className="h-4 w-4 mr-1" />
+                                {product.digitalDownload ? 'Manage' : 'Add'} Download
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 space-y-4">
+                    <Sparkles className="h-12 w-12 text-muted-foreground/40 mx-auto" />
+                    <p className="text-muted-foreground">No products yet. Add your first product above!</p>
+                  </div>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Categories */}
+          {/* Categories Management */}
           <TabsContent value="categories" className="space-y-8">
             <Card>
               <CardHeader>
@@ -455,55 +482,57 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="category-name">Category Name</Label>
+                  <Label htmlFor="category-name">Category Name *</Label>
                   <Input
                     id="category-name"
+                    placeholder="Enter category name"
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
-                    placeholder="Enter category name"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="category-description">Description (Optional)</Label>
+                  <Label htmlFor="category-description">Description</Label>
                   <Textarea
                     id="category-description"
+                    placeholder="Enter category description"
                     value={categoryDescription}
                     onChange={(e) => setCategoryDescription(e.target.value)}
-                    placeholder="Enter category description"
                     rows={3}
                   />
                 </div>
-                <Button onClick={handleAddCategory} disabled={addCategory.isPending} className="luxury-button">
+                <Button
+                  onClick={handleAddCategory}
+                  disabled={addCategory.isPending}
+                  className="premium-button"
+                >
                   {addCategory.isPending ? 'Adding...' : 'Add Category'}
                 </Button>
               </CardContent>
             </Card>
 
+            {/* Existing Categories */}
             <Card>
               <CardHeader>
                 <CardTitle>Existing Categories</CardTitle>
                 <CardDescription>Manage your product categories</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <div
-                      key={category.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
-                      <div>
-                        <h3 className="font-semibold">{category.name}</h3>
-                        {category.description && (
+                {categories.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {categories.map((category) => (
+                      <Card key={category.id} className="premium-card">
+                        <CardContent className="p-4 space-y-2">
+                          <h3 className="font-semibold">{category.name}</h3>
                           <p className="text-sm text-muted-foreground">{category.description}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {categories.length === 0 && (
-                  <p className="text-center text-muted-foreground py-8">
-                    No categories yet. Add your first category above!
-                  </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 space-y-4">
+                    <Sparkles className="h-12 w-12 text-muted-foreground/40 mx-auto" />
+                    <p className="text-muted-foreground">No categories yet. Add your first category above!</p>
+                  </div>
                 )}
               </CardContent>
             </Card>

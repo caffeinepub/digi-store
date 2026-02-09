@@ -142,10 +142,21 @@ export function useAddProduct() {
     mutationFn: async (product: Product) => {
       if (!actor) throw new Error('Actor not available');
       await actor.addProduct(product);
+      return product;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      queryClient.invalidateQueries({ queryKey: ['homepageContent'] });
+    onSuccess: (newProduct) => {
+      // Optimistically update the products cache
+      queryClient.setQueryData<Product[]>(['products'], (oldProducts) => {
+        if (!oldProducts) return [newProduct];
+        return [...oldProducts, newProduct];
+      });
+
+      // Prefill the individual product cache
+      queryClient.setQueryData(['product', newProduct.id], newProduct);
+
+      // Trigger refetch to ensure consistency with backend
+      queryClient.invalidateQueries({ queryKey: ['products'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['homepageContent'], refetchType: 'active' });
     },
   });
 }
@@ -158,10 +169,21 @@ export function useUpdateProduct() {
     mutationFn: async (product: Product) => {
       if (!actor) throw new Error('Actor not available');
       await actor.updateProduct(product);
+      return product;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      queryClient.invalidateQueries({ queryKey: ['homepageContent'] });
+    onSuccess: (updatedProduct) => {
+      // Update the products cache
+      queryClient.setQueryData<Product[]>(['products'], (oldProducts) => {
+        if (!oldProducts) return [updatedProduct];
+        return oldProducts.map((p) => (p.id === updatedProduct.id ? updatedProduct : p));
+      });
+
+      // Update the individual product cache
+      queryClient.setQueryData(['product', updatedProduct.id], updatedProduct);
+
+      // Trigger refetch to ensure consistency
+      queryClient.invalidateQueries({ queryKey: ['products'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['homepageContent'], refetchType: 'active' });
     },
   });
 }
@@ -174,10 +196,21 @@ export function useDeleteProduct() {
     mutationFn: async (productId: string) => {
       if (!actor) throw new Error('Actor not available');
       await actor.deleteProduct(productId);
+      return productId;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      queryClient.invalidateQueries({ queryKey: ['homepageContent'] });
+    onSuccess: (deletedProductId) => {
+      // Remove from products cache
+      queryClient.setQueryData<Product[]>(['products'], (oldProducts) => {
+        if (!oldProducts) return [];
+        return oldProducts.filter((p) => p.id !== deletedProductId);
+      });
+
+      // Remove individual product cache
+      queryClient.removeQueries({ queryKey: ['product', deletedProductId] });
+
+      // Trigger refetch
+      queryClient.invalidateQueries({ queryKey: ['products'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['homepageContent'], refetchType: 'active' });
     },
   });
 }

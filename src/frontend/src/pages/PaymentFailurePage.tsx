@@ -5,16 +5,16 @@ import { Link } from '@tanstack/react-router';
 
 export default function PaymentFailurePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-vibrant-purple/5 to-background flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-background via-accent/20 to-background flex items-center justify-center">
       <div className="container mx-auto px-4 py-16">
-        <Card className="max-w-2xl mx-auto border-destructive/30 bg-gradient-to-br from-destructive/5 to-destructive/10">
+        <Card className="max-w-2xl mx-auto border">
           <CardContent className="p-12 text-center space-y-8">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-destructive/10 border-4 border-destructive/20">
               <XCircle className="h-12 w-12 text-destructive" />
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-destructive">
+              <h1 className="text-4xl font-bold text-foreground">
                 Payment Failed
               </h1>
               <p className="text-xl text-muted-foreground">
@@ -22,24 +22,24 @@ export default function PaymentFailurePage() {
               </p>
             </div>
 
-            <div className="bg-background/50 rounded-lg p-6 space-y-4">
-              <h2 className="text-lg font-semibold">Common Issues</h2>
-              <ul className="text-left space-y-2 text-muted-foreground text-sm">
+            <div className="bg-muted/30 rounded-lg p-6 text-left space-y-3">
+              <h2 className="font-semibold text-lg">Common Issues:</h2>
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
-                  <span className="text-destructive">•</span>
+                  <span className="text-primary mt-0.5">•</span>
                   <span>Insufficient funds in your account</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-destructive">•</span>
+                  <span className="text-primary mt-0.5">•</span>
                   <span>Incorrect card details or expired card</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-destructive">•</span>
+                  <span className="text-primary mt-0.5">•</span>
                   <span>Payment declined by your bank</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-destructive">•</span>
-                  <span>Network or connection issues</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Network connection issues</span>
                 </li>
               </ul>
             </div>
@@ -52,7 +52,7 @@ export default function PaymentFailurePage() {
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button size="lg" variant="outline" className="border-vibrant-magenta/40 hover:bg-vibrant-magenta hover:text-white">
+                <Button size="lg" variant="outline">
                   <Mail className="mr-2 h-5 w-5" />
                   Contact Support
                 </Button>

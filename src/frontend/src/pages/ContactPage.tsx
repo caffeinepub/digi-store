@@ -34,11 +34,11 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-vibrant-purple/5 to-background">
+    <div className="min-h-screen bg-gradient-to-b from-background via-accent/20 to-background">
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center space-y-6 mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-vibrant-magenta via-vibrant-purple to-vibrant-blue bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground">
             Contact Us
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -49,11 +49,11 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Contact Information */}
           <div className="space-y-6">
-            <Card className="border-vibrant-magenta/20">
+            <Card className="border">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-vibrant-magenta/10 border border-vibrant-magenta/20 flex-shrink-0">
-                    <Mail className="h-6 w-6 text-vibrant-magenta" />
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex-shrink-0">
+                    <Mail className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
@@ -63,11 +63,11 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-vibrant-purple/20">
+            <Card className="border">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-vibrant-purple/10 border border-vibrant-purple/20 flex-shrink-0">
-                    <Phone className="h-6 w-6 text-vibrant-purple" />
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex-shrink-0">
+                    <Phone className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
@@ -77,11 +77,11 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-vibrant-blue/20">
+            <Card className="border">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-vibrant-blue/10 border border-vibrant-blue/20 flex-shrink-0">
-                    <MapPin className="h-6 w-6 text-vibrant-blue" />
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex-shrink-0">
+                    <MapPin className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Location</h3>
@@ -93,7 +93,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Form */}
-          <Card className="lg:col-span-2 border-vibrant-magenta/20">
+          <Card className="lg:col-span-2 border">
             <CardHeader>
               <CardTitle className="text-2xl">Send us a Message</CardTitle>
             </CardHeader>

@@ -67,16 +67,16 @@ export default function PaymentSuccessPage() {
   }, [identity, search, allProducts]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-vibrant-purple/5 to-background flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-background via-accent/20 to-background flex items-center justify-center">
       <div className="container mx-auto px-4 py-16">
-        <Card className="max-w-2xl mx-auto border-vibrant-magenta/30 bg-gradient-to-br from-vibrant-purple/5 to-vibrant-magenta/5">
+        <Card className="max-w-2xl mx-auto border bg-accent/20">
           <CardContent className="p-12 text-center space-y-8">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-vibrant-magenta/10 border-4 border-vibrant-magenta/20">
-              <CheckCircle2 className="h-12 w-12 text-vibrant-magenta" />
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 border-4 border-primary/20">
+              <CheckCircle2 className="h-12 w-12 text-primary" />
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-vibrant-magenta via-vibrant-purple to-vibrant-blue bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold text-foreground">
                 Payment Successful!
               </h1>
               <p className="text-xl text-muted-foreground">
@@ -86,18 +86,18 @@ export default function PaymentSuccessPage() {
 
             {isProcessing ? (
               <div className="bg-background/50 rounded-lg p-6 space-y-4">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto text-vibrant-magenta" />
+                <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
                 <p className="text-muted-foreground">Processing your purchase...</p>
               </div>
             ) : purchasedProducts.length > 0 ? (
               <div className="bg-background/50 rounded-lg p-6 space-y-4">
                 <h2 className="text-lg font-semibold flex items-center justify-center gap-2">
-                  <Download className="h-5 w-5 text-vibrant-magenta" />
+                  <Download className="h-5 w-5 text-primary" />
                   Your Digital Downloads
                 </h2>
                 <div className="space-y-3">
                   {purchasedProducts.map((product) => (
-                    <div key={product.id} className="flex items-center justify-between p-3 bg-background rounded-lg border border-vibrant-magenta/20">
+                    <div key={product.id} className="flex items-center justify-between p-3 bg-background rounded-lg border">
                       <div className="text-left">
                         <p className="font-medium">{product.name}</p>
                         <p className="text-sm text-muted-foreground">
@@ -126,38 +126,25 @@ export default function PaymentSuccessPage() {
             ) : (
               <div className="bg-background/50 rounded-lg p-6 space-y-4">
                 <h2 className="text-lg font-semibold">What's Next?</h2>
-                <ul className="text-left space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-vibrant-magenta flex-shrink-0 mt-0.5" />
-                    <span>You'll receive a confirmation email with your order details</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-vibrant-magenta flex-shrink-0 mt-0.5" />
-                    <span>Your digital products will be available for download immediately</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-vibrant-magenta flex-shrink-0 mt-0.5" />
-                    <span>Check your email for download links and instructions</span>
-                  </li>
-                </ul>
+                <p className="text-muted-foreground">
+                  You'll receive a confirmation email shortly with your order details.
+                </p>
               </div>
             )}
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Link to="/shop">
+              <Link to="/downloads">
                 <Button size="lg" className="vibrant-button">
+                  <Download className="mr-2 h-5 w-5" />
+                  View All Downloads
+                </Button>
+              </Link>
+              <Link to="/shop">
+                <Button size="lg" variant="outline">
                   Continue Shopping
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              {identity && (
-                <Link to="/downloads">
-                  <Button size="lg" variant="outline" className="border-vibrant-magenta/40 hover:bg-vibrant-magenta hover:text-white">
-                    <Download className="mr-2 h-5 w-5" />
-                    View All Downloads
-                  </Button>
-                </Link>
-              )}
             </div>
           </CardContent>
         </Card>

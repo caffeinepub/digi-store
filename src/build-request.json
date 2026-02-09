@@ -1,111 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Support digital products with downloadable files after purchase",
+  "title": "Ensure product creation works end-to-end (Admin add product -> visible in Shop/Product pages)",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-3",
-      "text": "Extend the Product model to support digital products by adding optional digital-download metadata and an optional downloadable file reference, while keeping existing product behavior unchanged for non-digital products.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "add as digital product"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Existing products without digital fields still load and render without errors.",
-        "A product can be marked as a digital product and can optionally have a downloadable file associated with it.",
-        "Backend candid/typescript bindings regenerate successfully and the frontend compiles against the updated Product type."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add backend APIs to let an admin attach/update/remove a product's digital download file (stored using existing blob storage) without affecting the product image list.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "add as digital product"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin-only method(s) exist to set and clear a product’s digital download file reference.",
-        "Non-admin callers are rejected with an authorization error.",
-        "If a product does not exist, the backend traps with a clear error message."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add backend purchase entitlement tracking for digital products and expose user-only APIs to (1) record/confirm a successful payment for specific productId(s) and (2) list the caller’s entitled digital downloads.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "add as digital product"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A user-only method exists to confirm a purchase for one or more productIds using a Stripe session id (sessionId) and persists entitlements for the caller.",
-        "A user-only query exists to list the caller’s entitled digital products (only those with digital downloads attached).",
-        "Entitlements are scoped per-caller (Principal) and do not leak across users."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Update the Admin UI product form to support creating/updating a product as a digital product and uploading an associated downloadable file (in addition to the existing product image upload). Use English for all user-facing text.",
+      "id": "REQ-17",
+      "text": "Make the \"Add New Product\" flow fully functional end-to-end so an admin can add a product from the Admin page and the newly created product reliably appears in the \"Existing Products\" list and is visible in the Shop page and Product Detail page without requiring a manual refresh or reseeding.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-3"
         ],
         "quotes": [
-          "add as digital product"
+          "add product"
         ]
       },
       "acceptanceCriteria": [
-        "Admin can mark a product as a digital product via a clear control (e.g., switch/checkbox).",
-        "Admin can upload a digital download file separately from product images and save it to the backend.",
-        "Validation prevents saving a digital product without the required digital metadata (if required by backend rules), and errors are shown in English."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Add a customer downloads flow: (1) ensure the checkout success URL includes enough context (e.g., productId(s) and/or session id) to confirm entitlements, (2) on the Payment Success page, confirm the purchase and show a working list of downloadable items for the logged-in user, and (3) make the existing “View Downloads” button navigate to a dedicated downloads page that lists entitled digital products and provides download links.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "add as digital product"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After a successful Stripe checkout, the app confirms the purchase and persists entitlement(s) for the logged-in user.",
-        "The Payment Success page displays download(s) for entitled digital products (or a clear English message if none are available).",
-        "A new Downloads page is accessible (e.g., via the Payment Success CTA) and lists entitled digital products with download links that work via the blob direct URL mechanism.",
-        "If the user is not logged in, the downloads UI prompts them to log in in English and does not show any private download links."
+        "When logged in as an admin, creating a product from Admin → Products → Add New Product succeeds and shows the success toast in English.",
+        "After adding a product, the new product appears in the Admin page \"Existing Products\" list within a few seconds (React Query refetch/invalidation works) without a full page reload.",
+        "After adding a product, navigating to the Shop page shows the new product in the product grid (and it is searchable/filterable like other products).",
+        "Clicking the new product in Shop opens its Product Detail page, and the page loads the product successfully (no \"Product not found\" fallback).",
+        "If the admin uploads a product image, the image renders correctly on Admin cards, Shop cards, and Product Detail; if no image is uploaded, the existing placeholder UI renders without layout breakage."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor with all logic in backend/main.mo.",
-    "Only generate backend/migration.mo if required to safely handle an upgrade of existing persisted Product data.",
-    "Do not edit any frontend files under frontend/src/components/ui or any paths listed in frontend.immutablePaths.",
-    "Use English for any user-facing text."
+    "Backend must remain a single Motoko actor (all logic in backend/main.mo).",
+    "Do not edit frontend files under immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose instead).",
+    "Use English for all user-facing text."
   ],
   "nonGoals": [
-    "Building or importing an 11,000+ product catalog as part of this change.",
-    "Third-party authentication providers (only Internet Identity).",
-    "Email delivery of download links.",
-    "Real-time updates/notifications."
+    "Adding a bulk catalog (e.g., 11,000+ products) as part of this request.",
+    "Changing the Product model schema or adding new backend endpoints (unless required to fix a proven blocking issue in the existing add product flow).",
+    "Implementing third-party authentication providers (only Internet Identity is supported)."
   ],
   "imageRequirements": {
     "required": [],

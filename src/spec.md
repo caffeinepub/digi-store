@@ -1,13 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Support digital products by attaching downloadable files to products, tracking post-purchase entitlements, and letting customers access their purchased downloads.
+**Goal:** Make the Admin “Add New Product” flow work end-to-end so newly created products reliably appear across Admin, Shop, and Product Detail pages without manual refresh or reseeding.
 
 **Planned changes:**
-- Extend the backend Product model with optional digital-product metadata and an optional downloadable file reference, without changing behavior for non-digital products.
-- Add admin-only backend APIs to attach/update/remove a product’s digital download file using existing blob storage, separate from product images.
-- Add backend entitlement tracking for digital products, including user-only APIs to confirm a successful purchase via Stripe sessionId and to list the caller’s entitled digital downloads.
-- Update the Admin UI product form to mark products as digital, upload a digital download file separately from images, and display validation/errors in English.
-- Update the customer flow to confirm entitlements on the Payment Success page (using checkout success URL context), display available downloads, and add a dedicated Downloads page reachable via the existing “View Downloads” button.
+- Fix the Admin → Products → Add New Product submission flow so product creation succeeds reliably and shows an English success toast.
+- Ensure the Admin “Existing Products” list updates automatically after creation (React Query invalidation/refetch) without a full page reload.
+- Ensure the Shop product grid updates to include newly created products and they behave like existing products for search/filter.
+- Ensure Product Detail can load a newly created product (no erroneous “Product not found” fallback).
+- Ensure uploaded product images render correctly on Admin cards, Shop cards, and Product Detail; keep placeholder behavior stable when no image is uploaded.
 
-**User-visible outcome:** Admins can create/manage digital products with downloadable files, and customers who successfully complete checkout (and are logged in) can view and download their entitled digital purchases from the Payment Success and Downloads pages.
+**User-visible outcome:** An admin can add a new product and see it appear shortly in the Admin list, in the Shop grid, and on its Product Detail page (with correct image/placeholder behavior), without refreshing the app.

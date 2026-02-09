@@ -36,16 +36,16 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2">
+        <Link to="/" className="flex items-center space-x-3">
           <img 
-            src="/assets/generated/digi-store-logo-transparent.dim_200x200.png" 
+            src="/assets/generated/digi-store-logo-premium-transparent.dim_200x200.png" 
             alt="Digi Store Logo" 
             className="h-10 w-10 object-contain" 
           />
-          <span className="text-xl font-bold bg-gradient-to-r from-vibrant-magenta via-vibrant-purple to-vibrant-blue bg-clip-text text-transparent">
+          <span className="text-xl font-bold text-foreground tracking-tight">
             Digi Store
           </span>
         </Link>
@@ -54,31 +54,31 @@ export default function Header() {
         <nav className="hidden md:flex items-center space-x-8">
           <Link
             to="/"
-            className="text-sm font-medium transition-colors hover:text-vibrant-magenta"
-            activeProps={{ className: 'text-vibrant-magenta' }}
+            className="text-sm font-medium transition-colors hover:text-primary"
+            activeProps={{ className: 'text-primary' }}
           >
             Home
           </Link>
           <Link
             to="/shop"
-            className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
-            activeProps={{ className: 'text-vibrant-magenta' }}
+            className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
+            activeProps={{ className: 'text-primary' }}
           >
             <ShoppingBag className="h-4 w-4" />
             Shop
           </Link>
           <Link
             to="/about"
-            className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
-            activeProps={{ className: 'text-vibrant-magenta' }}
+            className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
+            activeProps={{ className: 'text-primary' }}
           >
             <Info className="h-4 w-4" />
             About
           </Link>
           <Link
             to="/contact"
-            className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
-            activeProps={{ className: 'text-vibrant-magenta' }}
+            className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
+            activeProps={{ className: 'text-primary' }}
           >
             <Mail className="h-4 w-4" />
             Contact
@@ -86,8 +86,8 @@ export default function Header() {
           {isAuthenticated && (
             <Link
               to="/downloads"
-              className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
-              activeProps={{ className: 'text-vibrant-magenta' }}
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
+              activeProps={{ className: 'text-primary' }}
             >
               <Download className="h-4 w-4" />
               Downloads
@@ -96,8 +96,8 @@ export default function Header() {
           {isAdmin && (
             <Link
               to="/admin"
-              className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
-              activeProps={{ className: 'text-vibrant-magenta' }}
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
+              activeProps={{ className: 'text-primary' }}
             >
               <Shield className="h-4 w-4" />
               Admin
@@ -111,7 +111,7 @@ export default function Header() {
             onClick={handleAuth}
             disabled={disabled}
             variant={isAuthenticated ? 'outline' : 'default'}
-            className="vibrant-button"
+            className={!isAuthenticated ? 'premium-button' : ''}
           >
             {buttonText}
           </Button>
@@ -129,18 +129,18 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur">
+        <div className="md:hidden border-t border-border/60 bg-background/95 backdrop-blur">
           <nav className="container mx-auto flex flex-col space-y-4 px-4 py-4">
             <Link
               to="/"
-              className="text-sm font-medium transition-colors hover:text-vibrant-magenta"
+              className="text-sm font-medium transition-colors hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               to="/shop"
-              className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               <ShoppingBag className="h-4 w-4" />
@@ -148,7 +148,7 @@ export default function Header() {
             </Link>
             <Link
               to="/about"
-              className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Info className="h-4 w-4" />
@@ -156,7 +156,7 @@ export default function Header() {
             </Link>
             <Link
               to="/contact"
-              className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Mail className="h-4 w-4" />
@@ -165,7 +165,7 @@ export default function Header() {
             {isAuthenticated && (
               <Link
                 to="/downloads"
-                className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
+                className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Download className="h-4 w-4" />
@@ -175,7 +175,7 @@ export default function Header() {
             {isAdmin && (
               <Link
                 to="/admin"
-                className="text-sm font-medium transition-colors hover:text-vibrant-magenta flex items-center gap-2"
+                className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Shield className="h-4 w-4" />
@@ -189,7 +189,7 @@ export default function Header() {
               }}
               disabled={disabled}
               variant={isAuthenticated ? 'outline' : 'default'}
-              className="vibrant-button w-full"
+              className={`w-full ${!isAuthenticated ? 'premium-button' : ''}`}
             >
               {buttonText}
             </Button>

@@ -115,7 +115,7 @@ export default function App() {
   const showProfileSetup = isAuthenticated && !profileLoading && isFetched && userProfile === null;
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <RouterProvider router={router} />
       {showProfileSetup && <ProfileSetupModal />}
       <StripeSetupModal />
