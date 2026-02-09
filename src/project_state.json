@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "Build an app for selling kids worksheets as digital products, including adding a large product catalog (11,000+ worksheets).",
+  "architectural_notes": [
+    "Worksheets products should be modeled/sold as digital/downloadable products (not physical/shippable)."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-add-a-new-default-product-category-for-kids-worksheets-e-g-id-kids-worksheets-name-kids-worksheets-that-can-be-created-by-an-admin-from-the-admin-page-and-or-seeded-via-the-existing-demo-seeder",
+      "title": "Add a new default product category for kids worksheets (e.g., id: \"kids-worksheets\", name: \"Kids Worksheets\") that can be created by an admin from the Admin page and/or seeded via the existing demo seeder.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-at-least-one-kids-worksheets-product-to-the-catalog-a-single-sample-bundle-product-not-11-000-so-the-storefront-has-a-real-worksheet-product-visible-after-seeding-or-manual-admin-creation",
+      "title": "Add at least one kids-worksheets product to the catalog (a single sample/bundle product, not 11,000+) so the storefront has a real worksheet product visible after seeding or manual admin creation.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-ui-product-form-to-support-creating-updating-a-product-as-a-digital-product-and-uploading-an-associated-downloadable-file-in-addition-to-the-existing-product-image-upload-use-english-for-all-user-facing-text",
+      "title": "Update the Admin UI product form to support creating/updating a product as a digital product and uploading an associated downloadable file (in addition to the existing product image upload). Use English for all user-facing text.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-customer-downloads-flow-1-ensure-the-checkout-success-url-includes-enough-context-e-g-productid-s-and-or-session-id-to-confirm-entitlements-2-on-the-payment-success-page-confirm-the-purchase-and-show-a-working-list-of-downloadable-items-for-the-logged-in-user-and-3-make-the-existing-view-downloads-button-navigate-to-a-dedicated-downloads-page-that-lists-entitled-digital-products-and-provides-download-links",
+      "title": "Add a customer downloads flow: (1) ensure the checkout success URL includes enough context (e.g., productId(s) and/or session id) to confirm entitlements, (2) on the Payment Success page, confirm the purchase and show a working list of downloadable items for the logged-in user, and (3) make the existing “View Downloads” button navigate to a dedicated downloads page that lists entitled digital products and provides download links.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add products to the app (kids worksheets catalog; user mentioned 11,000+ worksheets as products)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Support adding kids worksheets as digital products (downloadable items)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Extend the Product model to support digital products by adding optional digital-download metadata and an optional downloadable file reference, while keeping existing product behavior unchanged for non-digital products.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add backend APIs to let an admin attach/update/remove a product's digital download file (stored using existing blob storage) without affecting the product image list.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Add backend purchase entitlement tracking for digital products and expose user-only APIs to (1) record/confirm a successful payment for specific productId(s) and (2) list the caller’s entitled digital downloads.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Add Kids Worksheets products to the store catalog",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

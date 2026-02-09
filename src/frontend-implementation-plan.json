@@ -1,0 +1,75 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Digital products: admin upload + customer downloads after purchase",
+  "requirements": [
+    {
+      "id": "REQ-6",
+      "summary": "Extend Admin product form to mark products as digital and upload/manage a separate downloadable file with required metadata.",
+      "acceptanceCriteria": [
+        "Admin can mark a product as a digital product via a clear control (e.g., switch/checkbox).",
+        "Admin can upload a digital download file separately from product images and save it to the backend.",
+        "Validation prevents saving a digital product without the required digital metadata (if required by backend rules), and errors are shown in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add React Query mutations/queries for digital download admin actions (set/update/remove digital download for a product). Use the blob-storage ExternalBlob for file upload and direct URL handling; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/admin/ProductDigitalDownloadDialog.tsx",
+          "operation": "create",
+          "description": "Create an admin-only dialog/component for attaching/updating/removing a product digital download: inputs for content type, optional download limit, and a separate file input for the downloadable file. Convert File -> ExternalBlob (blob-storage) and show upload progress if supported; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/AdminPage.tsx",
+          "operation": "modify",
+          "description": "Update the Products tab UI to support digital products: add a 'Digital Product' switch + digital metadata fields and a separate downloadable file chooser (distinct from product images). Wire save actions to the new digital-download hooks and enforce English validation/error messaging. Add a 'Manage Digital Download' action per existing product card that opens ProductDigitalDownloadDialog."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Implement customer downloads flow: include purchase context in checkout success URL, confirm purchase on Payment Success, and add a dedicated Downloads page showing entitled digital downloads (login-gated).",
+      "acceptanceCriteria": [
+        "After a successful Stripe checkout, the app confirms the purchase and persists entitlement(s) for the logged-in user.",
+        "The Payment Success page displays download(s) for entitled digital products (or a clear English message if none are available).",
+        "A new Downloads page is accessible (e.g., via the Payment Success CTA) and lists entitled digital products with download links that work via the blob direct URL mechanism.",
+        "If the user is not logged in, the downloads UI prompts them to log in in English and does not show any private download links."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Update the Stripe checkout hook to embed required context in the success URL (e.g., session id placeholder and productId(s)) and validate Stripe session JSON includes a non-empty url before redirecting. Add user queries for listing entitled digital downloads and a mutation to confirm a successful payment using the session id (per updated backend bindings). Use blob-storage ExternalBlob.getDirectURL() for download links; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ProductDetailPage.tsx",
+          "operation": "modify",
+          "description": "Pass productId context into checkout creation so the generated Stripe success URL contains sufficient context for entitlement confirmation. Keep login-required behavior in English and ensure redirect only happens when Stripe session url is present (per stripe component guidance); verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/PaymentSuccessPage.tsx",
+          "operation": "modify",
+          "description": "On load, extract session id and purchased productId(s) from the URL (or persisted params) and, if the user is logged in, call the confirm-purchase mutation then fetch and render entitled digital downloads. Show clear English states for loading, errors, and 'no downloads available'. Update 'View Downloads' CTA to navigate to the dedicated Downloads page."
+        },
+        {
+          "path": "frontend/src/pages/DownloadsPage.tsx",
+          "operation": "create",
+          "description": "Create a Downloads page that is login-gated: if not logged in, prompt to log in in English and do not render download links. If logged in, list entitled digital products and provide working download links using blob-storage ExternalBlob direct URL mechanism; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register a new TanStack Router route for the Downloads page (e.g., /downloads) and ensure it is wired into navigation flows (Payment Success CTA)."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Optionally add a 'Downloads' navigation link that is visible only when the user is authenticated (Internet Identity), pointing to the new Downloads route, ensuring English text and no exposure of private links when logged out. Verify the authorization component's frontend usage guidance before implementing."
+        }
+      ]
+    }
+  ]
+}

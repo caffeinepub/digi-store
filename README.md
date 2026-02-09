@@ -1,2 +1,3 @@
-# digi-store
-Exported from Caffeine project: Add Kids Worksheets products to the store catalog
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`
