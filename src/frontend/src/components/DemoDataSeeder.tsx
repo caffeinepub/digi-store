@@ -22,7 +22,7 @@ export default function DemoDataSeeder() {
   const hasData = products.length > 0 || categories.length > 0;
 
   useEffect(() => {
-    if (products.length >= 7 && categories.length >= 4) {
+    if (products.length >= 8 && categories.length >= 4) {
       setSeedingComplete(true);
     }
   }, [products.length, categories.length]);
@@ -118,6 +118,16 @@ export default function DemoDataSeeder() {
           images: [ExternalBlob.fromURL('/assets/generated/ebook-creative-design.dim_400x400.png')],
           createdAt: BigInt(Date.now() * 1000000),
         },
+        {
+          id: 'product-kids-worksheets-starter',
+          name: 'Kids Worksheets Starter Pack',
+          description: 'Essential collection of educational worksheets for young learners. Includes activities for early math, reading, writing, and creative thinking. Perfect for getting started with structured learning at home.',
+          priceCents: BigInt(19900), // ₹199
+          category: 'kids-worksheets',
+          featured: false,
+          images: [ExternalBlob.fromURL('/assets/generated/kids-worksheets-199.dim_400x400.png')],
+          createdAt: BigInt(Date.now() * 1000000),
+        },
       ];
 
       for (const product of demoProducts) {
@@ -171,7 +181,7 @@ export default function DemoDataSeeder() {
           <p className="font-medium">This will add:</p>
           <ul className="list-disc list-inside space-y-1 text-muted-foreground ml-2">
             <li>4 product categories (Digital Art, E-books, Templates, Kids Worksheets)</li>
-            <li>7 demo products with images and INR pricing (₹2399-₹6399)</li>
+            <li>8 demo products with images and INR pricing (₹199-₹6399)</li>
             <li>4 featured products for the homepage</li>
             <li>Hero banner and brand story content with Digital India branding</li>
           </ul>

@@ -1,14 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
+  "projectStateVersion": 17,
   "summary": "Build an app for selling kids worksheets as digital products, including adding a large product catalog (11,000+ worksheets).",
   "architectural_notes": [
     "Worksheets products should be modeled/sold as digital/downloadable products (not physical/shippable)."
   ],
-  "known_issues": [
-    "Deployment process failed with a deployment error (unable to complete deployment)."
-  ],
+  "known_issues": [],
   "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Kid-friendly worksheets bundle cover illustration with simple icons (pencils, letters, numbers) on a clean light background (kids-worksheets-199.dim_400x400.png)",
   "existing_features": [
     {
       "id": "feature-add-a-new-default-product-category-for-kids-worksheets-e-g-id-kids-worksheets-name-kids-worksheets-that-can-be-created-by-an-admin-from-the-admin-page-and-or-seeded-via-the-existing-demo-seeder",
@@ -121,6 +120,22 @@
         "REQ-17"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-generate-a-new-custom-square-product-image-for-the-newly-added-product-priced-at-inr-199-00-19900-paise-add-the-image-file-under-frontend-public-assets-generated-and-ensure-it-is-suitable-as-a-storefront-product-thumbnail-clean-readable-kid-friendly-worksheets-style",
+      "title": "Generate a new custom square product image for the newly added product priced at INR ₹199.00 (19900 paise). Add the image file under `frontend/public/assets/generated` and ensure it is suitable as a storefront product thumbnail (clean, readable, kid-friendly worksheets style).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-seeded-demo-data-demo-data-seeder-so-the-inr-199-00-product-uses-the-new-custom-image-via-externalblob-fromurl-assets-generated-kids-worksheets-199-dim-400x400-png-in-its-images-array",
+      "title": "Update the seeded/demo data (Demo Data Seeder) so the INR ₹199.00 product uses the new custom image via `ExternalBlob.fromURL('/assets/generated/kids-worksheets-199.dim_400x400.png')` in its `images` array.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -181,6 +196,12 @@
     {
       "id": "AR-9",
       "summary": "Add a (kids worksheets) product priced at INR 199/- to the product catalog",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Set a custom product image for the newly added product (replace default/placeholder image so it displays correctly in storefront)",
       "reqIds": [],
       "status": "pending"
     }

@@ -1,32 +1,35 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T11:13:33.289Z",
+  "generatedAt": "2026-02-09T11:18:24.516Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-17",
-        "summary": "Make the \"Add New Product\" flow fully functional end-to-end so an admin can add a product from the Admin page and the newly created product reliably appears in the \"Existing Products\" list and is visible in the Shop page and Product Detail page without requiring a manual refresh or reseeding.",
+        "id": "REQ-18",
+        "summary": "Generate a new custom square product image for the newly added product priced at INR ₹199.00 (19900 paise). Add the image file under `frontend/public/assets/generated` and ensure it is suitable as a storefront product thumbnail (clean, readable, kid-friendly worksheets style).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/utils/productImage.ts",
-          "frontend/src/pages/AdminPage.tsx",
-          "frontend/src/pages/ShopPage.tsx",
-          "frontend/src/pages/ProductDetailPage.tsx"
+          "frontend/public/assets/generated/kids-worksheets-199.dim_400x400.png"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/utils/productImage.ts",
-          "frontend/src/pages/AdminPage.tsx",
-          "frontend/src/pages/ShopPage.tsx",
-          "frontend/src/pages/ProductDetailPage.tsx"
+          "frontend/public/assets/generated/kids-worksheets-199.dim_400x400.png"
+        ]
+      },
+      {
+        "id": "REQ-19",
+        "summary": "Update the seeded/demo data (Demo Data Seeder) so the INR ₹199.00 product uses the new custom image via `ExternalBlob.fromURL('/assets/generated/kids-worksheets-199.dim_400x400.png')` in its `images` array.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DemoDataSeeder.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DemoDataSeeder.tsx"
         ]
       }
     ]
@@ -36,11 +39,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/AdminPage.tsx",
-    "frontend/src/pages/ProductDetailPage.tsx",
-    "frontend/src/pages/ShopPage.tsx",
-    "frontend/src/utils/productImage.ts",
+    "frontend/public/assets/generated/kids-worksheets-199.dim_400x400.png",
+    "frontend/src/components/DemoDataSeeder.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

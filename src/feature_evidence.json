@@ -2,14 +2,30 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-make-the-add-new-product-flow-fully-functional-end-to-end-so-an-admin-can-add-a-product-from-the-admin-page-and-the-newly-created-product-reliably-appears-in-the-existing-products-list-and-is-visible-in-the-shop-page-and-product-detail-page-without-requiring-a-manual-refresh-or-reseeding",
-      "featureTitle": "Make the \"Add New Product\" flow fully functional end-to-end so an admin can add a product from the Admin page and the newly created product reliably appears in the \"Existing Products\" list and is visible in the Shop page and Product Detail page without requiring a manual refresh or reseeding.",
+      "featureId": "feature-generate-a-new-custom-square-product-image-for-the-newly-added-product-priced-at-inr-199-00-19900-paise-add-the-image-file-under-frontend-public-assets-generated-and-ensure-it-is-suitable-as-a-storefront-product-thumbnail-clean-readable-kid-friendly-worksheets-style",
+      "featureTitle": "Generate a new custom square product image for the newly added product priced at INR ₹199.00 (19900 paise). Add the image file under `frontend/public/assets/generated` and ensure it is suitable as a storefront product thumbnail (clean, readable, kid-friendly worksheets style).",
+      "files": [],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "http-outcalls@3.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-seeded-demo-data-demo-data-seeder-so-the-inr-199-00-product-uses-the-new-custom-image-via-externalblob-fromurl-assets-generated-kids-worksheets-199-dim-400x400-png-in-its-images-array",
+      "featureTitle": "Update the seeded/demo data (Demo Data Seeder) so the INR ₹199.00 product uses the new custom image via `ExternalBlob.fromURL('/assets/generated/kids-worksheets-199.dim_400x400.png')` in its `images` array.",
       "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/AdminPage.tsx",
-        "frontend/src/pages/ProductDetailPage.tsx",
-        "frontend/src/pages/ShopPage.tsx",
-        "frontend/src/utils/productImage.ts"
+        "frontend/src/components/DemoDataSeeder.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -23,7 +39,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-17"
+        "REQ-19"
       ],
       "confidence": "high"
     }

@@ -1,41 +1,57 @@
 {
   "kind": "build_request",
-  "title": "Ensure product creation works end-to-end (Admin add product -> visible in Shop/Product pages)",
+  "title": "Set a custom product image for the newly added ₹199 product",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-17",
-      "text": "Make the \"Add New Product\" flow fully functional end-to-end so an admin can add a product from the Admin page and the newly created product reliably appears in the \"Existing Products\" list and is visible in the Shop page and Product Detail page without requiring a manual refresh or reseeding.",
+      "id": "REQ-18",
+      "text": "Generate a new custom square product image for the newly added product priced at INR ₹199.00 (19900 paise). Add the image file under `frontend/public/assets/generated` and ensure it is suitable as a storefront product thumbnail (clean, readable, kid-friendly worksheets style).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "add product"
+          "yes"
         ]
       },
       "acceptanceCriteria": [
-        "When logged in as an admin, creating a product from Admin → Products → Add New Product succeeds and shows the success toast in English.",
-        "After adding a product, the new product appears in the Admin page \"Existing Products\" list within a few seconds (React Query refetch/invalidation works) without a full page reload.",
-        "After adding a product, navigating to the Shop page shows the new product in the product grid (and it is searchable/filterable like other products).",
-        "Clicking the new product in Shop opens its Product Detail page, and the page loads the product successfully (no \"Product not found\" fallback).",
-        "If the admin uploads a product image, the image renders correctly on Admin cards, Shop cards, and Product Detail; if no image is uploaded, the existing placeholder UI renders without layout breakage."
+        "A new image file exists at `frontend/public/assets/generated/kids-worksheets-199.dim_400x400.png`.",
+        "The image is 400x400 and visually appropriate as a product thumbnail (no stretched aspect ratio, no tiny unreadable text)."
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Update the seeded/demo data (Demo Data Seeder) so the INR ₹199.00 product uses the new custom image via `ExternalBlob.fromURL('/assets/generated/kids-worksheets-199.dim_400x400.png')` in its `images` array.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After running the demo seeder on a fresh state, the ₹199.00 product appears in the Shop and Product Detail pages with the new custom image as its primary image.",
+        "The product image renders via `ExternalBlob.getDirectURL()` without errors, and no placeholder image is shown for the ₹199.00 product."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor (all logic in backend/main.mo).",
-    "Do not edit frontend files under immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose instead).",
-    "Use English for all user-facing text."
+    "Use English for all user-facing text.",
+    "Do not edit files under `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, or anything under `frontend/src/components/ui` (compose instead of editing).",
+    "All newly generated images must be shipped as static assets under `frontend/public/assets/generated` and loaded directly by the frontend (no backend image routing)."
   ],
   "nonGoals": [
-    "Adding a bulk catalog (e.g., 11,000+ products) as part of this request.",
-    "Changing the Product model schema or adding new backend endpoints (unless required to fix a proven blocking issue in the existing add product flow).",
-    "Implementing third-party authentication providers (only Internet Identity is supported)."
+    "Do not add new products or change product pricing (the request is only to set a custom image).",
+    "Do not change Stripe/payment logic.",
+    "Do not introduce new authentication methods beyond Internet Identity."
   ],
   "imageRequirements": {
-    "required": [],
+    "required": [
+      "Kid-friendly worksheets bundle cover illustration with simple icons (pencils, letters, numbers) on a clean light background (kids-worksheets-199.dim_400x400.png)"
+    ],
     "edits": []
   }
 }

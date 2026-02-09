@@ -1,43 +1,35 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix admin Add Product flow so new products appear immediately across Admin, Shop, and Product Detail",
+  "title": "Use custom thumbnail image for the ₹199 product in demo seeded data",
   "requirements": [
     {
-      "id": "REQ-17",
-      "summary": "Ensure admin-created products immediately appear in Admin Existing Products, Shop grid (searchable/filterable), and Product Detail without manual refresh; ensure uploaded images render consistently with safe fallbacks.",
+      "id": "REQ-18",
+      "summary": "Add a new custom 400x400 square product thumbnail image for the ₹199 product as a static generated asset.",
       "acceptanceCriteria": [
-        "When logged in as an admin, creating a product from Admin → Products → Add New Product succeeds and shows the success toast in English.",
-        "After adding a product, the new product appears in the Admin page \"Existing Products\" list within a few seconds (React Query refetch/invalidation works) without a full page reload.",
-        "After adding a product, navigating to the Shop page shows the new product in the product grid (and it is searchable/filterable like other products).",
-        "Clicking the new product in Shop opens its Product Detail page, and the page loads the product successfully (no \"Product not found\" fallback).",
-        "If the admin uploads a product image, the image renders correctly on Admin cards, Shop cards, and Product Detail; if no image is uploaded, the existing placeholder UI renders without layout breakage."
+        "A new image file exists at `frontend/public/assets/generated/kids-worksheets-199.dim_400x400.png`.",
+        "The image is 400x400 and visually appropriate as a product thumbnail (no stretched aspect ratio, no tiny unreadable text)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Harden product React Query behavior to make newly added products visible immediately: update useAddProduct to (1) optimistically insert the created product into the ['products'] cache, (2) prefill the ['product', productId] cache for the created product, and (3) trigger targeted invalidate+refetch for ['products'] and related views so the Admin list and Shop grid update without reload. Keep all user-facing messages in English. If product images use ExternalBlob URLs, ensure cache updates preserve ExternalBlob instances (blob-storage component). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/utils/productImage.ts",
+          "path": "frontend/public/assets/generated/kids-worksheets-199.dim_400x400.png",
           "operation": "create",
-          "description": "Add a small shared helper to safely derive a primary product image URL from Product.images (ExternalBlob) with try/catch safeguards and a consistent 'no image' result to preserve existing placeholder UI. This centralizes ExternalBlob.getDirectURL usage (blob-storage component) for Admin/Shop/Detail rendering. Verify the component's usage instructions before implementing."
-        },
+          "description": "Add the generated 400x400 PNG thumbnail asset at this exact path and filename. Ensure it is a clean, readable, kid-friendly worksheets style illustration suitable for storefront product thumbnails."
+        }
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "summary": "Update the Demo Data Seeder so the existing ₹199.00 product is assigned the new static image using ExternalBlob.fromURL in its images array.",
+      "acceptanceCriteria": [
+        "After running the demo seeder on a fresh state, the ₹199.00 product appears in the Shop and Product Detail pages with the new custom image as its primary image.",
+        "The product image renders via `ExternalBlob.getDirectURL()` without errors, and no placeholder image is shown for the ₹199.00 product."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/pages/AdminPage.tsx",
+          "path": "frontend/src/components/DemoDataSeeder.tsx",
           "operation": "modify",
-          "description": "Wire the improved add-product behavior into the Admin → Products → Add New Product flow: after a successful mutation, rely on the updated React Query cache/refetch to update the Existing Products list quickly, and ensure the success toast remains English. Update product card image rendering to use the shared product image helper so uploaded images reliably render and placeholders remain stable. Uses ExternalBlob direct URLs (blob-storage component). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/ShopPage.tsx",
-          "operation": "modify",
-          "description": "Update Shop product grid card image rendering to use the shared product image helper for consistent ExternalBlob URL handling; ensure products derived from the refreshed ['products'] query remain searchable/filterable without additional refresh. Uses ExternalBlob direct URLs (blob-storage component). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/ProductDetailPage.tsx",
-          "operation": "modify",
-          "description": "Improve Product Detail reliability for newly created products: ensure the page prefers cached product data when available (prefilled on add) and uses the shared product image helper for consistent rendering; keep existing placeholder UI when no image is present. Uses ExternalBlob direct URLs (blob-storage component). Verify the component's usage instructions before implementing."
+          "description": "Update the seeding flow to detect the already-existing product priced at INR ₹199.00 (19900 paise) and update it to use `images: [ExternalBlob.fromURL('/assets/generated/kids-worksheets-199.dim_400x400.png')]`. Use the blob-storage component’s ExternalBlob capability (fromURL) for static asset-backed images. Verify the component's usage instructions before implementing."
         }
       ]
     }

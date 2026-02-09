@@ -1,69 +1,39 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T11:13:33.286Z",
-  "summary": "Diff focuses on improving product image URL handling (new helper) and updating React Query product hooks/pages to better fetch and render newly added products across Admin, Shop, and Product Detail views. However, key parts of the Add Product mutation behavior and success toast/invalidation timing are truncated in the diff summary, so end-to-end REQ-17 compliance cannot be fully verified from the provided evidence.",
+  "generatedAt": "2026-02-09T11:18:24.512Z",
+  "summary": "The diff modifies DemoDataSeeder and metadata files but does not add the required static image asset, and it does not provide clear evidence that the ₹199 product’s images array was updated to use the exact requested ExternalBlob.fromURL path.",
   "missing_requirements": [
     {
-      "id": "REQ-17",
-      "requirement": "After creating a product in Admin → Products → Add New Product, show a success toast in English.",
-      "reason": "AdminPage imports `toast` but the diff summary is truncated before showing any `toast.success(...)` call or the exact English success message on product creation.",
+      "id": "REQ-18",
+      "requirement": "Add a new custom 400x400 product image at `frontend/public/assets/generated/kids-worksheets-199.dim_400x400.png` suitable for a storefront thumbnail.",
+      "reason": "The diff shows no added files, so the required PNG asset under `frontend/public/assets/generated` is not present in the change set.",
       "evidence": [
-        "frontend/src/pages/AdminPage.tsx (truncated)"
+        "File diff summary: \"ADDED FILES: - none\""
       ]
     },
     {
-      "id": "REQ-17",
-      "requirement": "After adding a product, the new product appears in the Admin page “Existing Products” list within a few seconds via React Query refetch/invalidation (no full reload).",
-      "reason": "`useAddProduct` is truncated right after `onSuccess`, so it’s not possible to confirm that the mutation invalidates/refetches `['products']` (and/or performs an optimistic cache update) to make the Admin list update automatically.",
+      "id": "REQ-19",
+      "requirement": "Update DemoDataSeeder so the INR ₹199 product uses `ExternalBlob.fromURL('/assets/generated/kids-worksheets-199.dim_400x400.png')` in its `images` array.",
+      "reason": "DemoDataSeeder.tsx is truncated and the shown portion only references other generated image paths; there is no visible evidence of the specific `kids-worksheets-199.dim_400x400.png` URL being used for the ₹199 product.",
       "evidence": [
-        "frontend/src/hooks/useQueries.ts (truncated)"
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "requirement": "After adding a product, navigating to the Shop page shows the new product in the product grid and it is searchable/filterable like other products (without reseeding/manual refresh).",
-      "reason": "ShopPage uses `useGetProducts` and filters client-side, but the diff summary does not provide evidence that the add-product mutation updates/invalidates the shared `['products']` cache so Shop reliably reflects the newly added product without manual refresh.",
-      "evidence": [
-        "frontend/src/pages/ShopPage.tsx (truncated)",
-        "frontend/src/hooks/useQueries.ts (truncated)"
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "requirement": "Clicking the new product in Shop opens Product Detail and loads successfully (no “Product not found” fallback for the newly created product).",
-      "reason": "ProductDetailPage still renders an explicit “Product not found” fallback when `useGetProduct` returns null; the diff summary does not show any mechanism (e.g., cache prefill for `['product', id]` after add, or guaranteed backend availability handling) that ensures newly created products won’t hit this fallback.",
-      "evidence": [
-        "frontend/src/pages/ProductDetailPage.tsx (truncated)",
-        "frontend/src/hooks/useQueries.ts (truncated)"
+        "frontend/src/components/DemoDataSeeder.tsx (truncated) shows images like `/assets/generated/digital-art-abstract.dim_400x400.png` but not the requested kids-worksheets-199 path."
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Global styling/theme redesign (new light theme tokens, premium utility classes, Tailwind config changes).",
-      "reason": "Not requested by REQ-17 (which is specifically about the Add New Product end-to-end flow). The diff summary indicates changes to global CSS and Tailwind configuration.",
+      "description": "Project metadata updated to describe building a large kids worksheets catalog (11,000+ worksheets).",
+      "reason": "The BuildRequest is only about setting a custom image for the ₹199 product; updating project state to a different/expanded scope is not requested.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions modifications to frontend/src/index.css and frontend/tailwind.config.js)"
-      ]
-    },
-    {
-      "description": "Demo data seeding changes (component that seeds demo products/categories/hero/brand story).",
-      "reason": "REQ-17 does not ask to add/modify demo seeding; it is also called out as a non-goal to add a large catalog, and seeding is unrelated to making add-product work end-to-end.",
-      "evidence": [
-        "frontend-file-summaries.txt (mentions frontend/src/components/DemoDataSeeder.tsx)",
-        "frontend/src/pages/AdminPage.tsx (truncated, imports DemoDataSeeder)"
+        "project_state.json (truncated) summary: \"including adding a large product catalog (11,000+ worksheets).\""
       ]
     }
   ],
-  "confidence": 0.55,
+  "confidence": 0.68,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/AdminPage.tsx",
-    "frontend/src/pages/ProductDetailPage.tsx",
-    "frontend/src/pages/ShopPage.tsx",
-    "frontend/src/utils/productImage.ts",
+    "frontend/src/components/DemoDataSeeder.tsx",
     "project_state.json"
   ]
 }
